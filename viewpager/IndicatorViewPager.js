@@ -11,28 +11,45 @@ import ViewPager from './ViewPager';
 const VIEWPAGER_REF = 'viewPager';
 const INDICATOR_REF = 'indicator';
 export default class IndicatorViewPager extends Component {
+
     static propTypes = {
         ...ViewPager.propTypes,
         indicator: PropTypes.node,
+        indicatorPosition: PropTypes.string,
         pagerStyle: View.propTypes.style
     };
+
     static defaultProps = {
         indicator: null,
+        indicatorPosition: 'bottom',
         initialPage: 0
     };
 
     render() {
-        return (
-            <View style={[styles.container, this.props.style]}>
+
+        const container = (
                 <ViewPager
-                    {...this.props}
-                    ref={VIEWPAGER_REF}
-                    style={[styles.pager, this.props.pagerStyle]}
-                    onPageScroll={this._onPageScroll.bind(this)}
-                    onPageSelected={this._onPageSelected.bind(this)}
-                />
-                {this._renderIndicator()}
-            </View>
+                        {...this.props}
+                        key="ivp-container"
+                        ref={VIEWPAGER_REF}
+                        style={[styles.pager, this.props.pagerStyle]}
+                        onPageScroll={this._onPageScroll.bind(this)}
+                        onPageSelected={this._onPageSelected.bind(this)}
+                        />
+        );
+
+        const indicator = (
+                <View key="ivp-indicator">
+                    {this._renderIndicator()}
+                </View>
+        );
+
+        const orderedViews = this.props.indicatorPosition == 'top' ? [indicator, container] : [container, indicator];
+
+        return (
+                <View style={[styles.container, this.props.style]}>
+                    {orderedViews}
+                </View>
         );
     }
 

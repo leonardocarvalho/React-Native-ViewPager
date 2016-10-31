@@ -11,14 +11,15 @@ import IndicatorViewPager from '../IndicatorViewPager';
 export default class PagerTitleIndicator extends Component {
     static propTypes = {
         ...View.propTypes,
-        initialPage: PropTypes.number,
-        pager: PropTypes.instanceOf(IndicatorViewPager),
-        titles: PropTypes.arrayOf(PropTypes.string).isRequired,
-        itemStyle: View.propTypes.style,
-        itemTextStyle: Text.propTypes.style,
-        selectedItemTextStyle: Text.propTypes.style,
-        selectedBorderStyle: View.propTypes.style
-    };
+            initialPage: PropTypes.number,
+            pager: PropTypes.instanceOf(IndicatorViewPager),
+    titles: PropTypes.arrayOf(PropTypes.string).isRequired,
+            itemStyle: View.propTypes.style,
+            itemTextStyle: Text.propTypes.style,
+            selectedItemTextStyle: Text.propTypes.style,
+            selectedBorderStyle: View.propTypes.style,
+            renderTitle: React.PropTypes.func,
+            };
 
     static defaultProps = {
         titles: [],
@@ -31,12 +32,12 @@ export default class PagerTitleIndicator extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return this.state.selectedIndex != nextState.selectedIndex ||
-            this.props.titles + '' != nextProps.titles + '' ||
-            this.props.style != nextProps.style ||
-            this.props.itemStyle != nextProps.itemStyle ||
-            this.props.itemTextStyle != nextProps.itemTextStyle ||
-            this.props.selectedItemTextStyle != nextProps.selectedItemTextStyle ||
-            this.props.selectedBorderStyle != nextProps.selectedBorderStyle;
+                this.props.titles + '' != nextProps.titles + '' ||
+                this.props.style != nextProps.style ||
+                this.props.itemStyle != nextProps.itemStyle ||
+                this.props.itemTextStyle != nextProps.itemTextStyle ||
+                this.props.selectedItemTextStyle != nextProps.selectedItemTextStyle ||
+                this.props.selectedBorderStyle != nextProps.selectedBorderStyle;
     }
 
     render() {
@@ -45,28 +46,29 @@ export default class PagerTitleIndicator extends Component {
 
         let titleViews = titles.map((title, index)=> {
             let isSelected = this.state.selectedIndex === index;
-            return (
-                <TouchableOpacity
-                    style={[styles.titleContainer, itemStyle]}
-                    activeOpacity={0.6}
-                    key={index}
-                    onPress={()=> {
-                        !isSelected && pager.setPage(index)
-                    }}
-                >
-                    <Text
-                        style={isSelected ? [styles.titleTextSelected, selectedItemTextStyle] : [styles.titleText, itemTextStyle]}
-                    >
+
+            const titleView = this.props.renderTitle ? this.props.renderTitle(index, title, isSelected) : (
+                    <Text style={isSelected ? [styles.titleTextSelected, selectedItemTextStyle]: [styles.titleText, itemTextStyle]}>
                         {title}
                     </Text>
-                    {isSelected && <View style={[styles.selectedBorder, selectedBorderStyle]}/> }
-                </TouchableOpacity>
+            );
+
+            return (
+                    <TouchableOpacity
+                            style={[styles.titleContainer, itemStyle]}
+                            activeOpacity={0.6}
+                            key={index}
+                            onPress={()=>{!isSelected && pager.setPage(index)}}
+                            >
+                        {titleView}
+                        {isSelected ? <View style={[styles.selectedBorder, selectedBorderStyle]}/> : null}
+                    </TouchableOpacity>
             );
         });
         return (
-            <View style={[styles.indicatorContainer, this.props.style]}>
-                {titleViews}
-            </View>
+                <View style={[styles.indicatorContainer, this.props.style]}>
+                    {titleViews}
+                </View>
         );
     }
 
