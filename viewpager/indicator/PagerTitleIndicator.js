@@ -32,18 +32,34 @@ export default class PagerTitleIndicator extends Component {
         autoUpdateTitle: true,
         initialPage: 0,
         topTitleEnabled: true,
-        topTitleValue: 'Home',
+        topTitleValue: null,
         topTitleStyle: {}
     };
 
-    state = {
-        selectedIndex: this.props.initialPage,
-        topTitleValue: this.props.autoUpdateTitle && this.props.topTitleEnabled && this.props.titles && this.props.titles.length > 0 ? this.props.titles[0] : 'Home',
-        topTitleEnabled: this.props.topTitleEnabled
-    };
+
 
     constructor(props) {
         super(props);
+
+        let topTitleValue = null;
+
+        if (this.props.topTitleEnabled && this.props.titles && this.props.titles.length > 0) {
+            topTitleValue = this.props.titles[0];
+        }
+
+        if (this.props.topTitleValue != null) {
+            topTitleValue = this.props.topTitleValue;
+        }
+
+        if (topTitleValue == null) {
+            topTitleValue = 'Example';
+        }
+
+        this.state = {
+            selectedIndex: this.props.initialPage,
+            topTitleValue: topTitleValue,
+            topTitleEnabled: this.props.topTitleEnabled
+        };
 
         this.onItemPress = this.onItemPress.bind(this);
         this.setTopTitle = this.setTopTitle.bind(this);
@@ -53,11 +69,12 @@ export default class PagerTitleIndicator extends Component {
         this.setState({
             topTitleValue: newTitle
         });
+
     }
 
     onItemPress(pager, index, isSelected) {
         if (this.props.onItemPress) {
-            this.props.onItemPress(index, isSelected);
+            this.props.onItemPress(index, isSelected, this);
         }
 
         if (!isSelected) {

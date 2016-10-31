@@ -25,6 +25,15 @@ export default class IndicatorViewPager extends Component {
         initialPage: 0
     };
 
+    setTopTitle(newTitle) {
+        if (this.refs["indicator"]) {
+            this.refs["indicator"].setTopTitle(newTitle);
+            return true;
+        }
+
+        return false;
+    }
+
     getCurrentPageIndex() {
         if (this.refs[VIEWPAGER_REF]) {
             return this.refs[VIEWPAGER_REF].state.currentPage;
