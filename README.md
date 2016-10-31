@@ -10,6 +10,37 @@ Additional features:
 - Listen event `onPageChange(index)` on `PagerTabIndicator`, `PagerTitleIndicator` and `PagerDotIndicator`
 - Add method `getCurrentPageIndex()` on `IndicatorViewPager` ref
 
+- Add management of `topTitle[Value/Enabled/ContainerStyle/TextStyle]`, see example:
+```javascript
+<PagerTitleIndicator
+    ref="pageIndicator"
+    style={{backgroundColor:'#E62118'}}
+    autoUpdateTitle={true}
+    topTitleValue="This title is static if autoUpdateTitle = false"
+    topTitleEnabled={true}
+    topTitleContainerStyle={{backgroundColor: '#E62118'}}
+    topTitleTextStyle={{color: 'white'}}
+    itemsContainerStyle={{backgroundColor: '#E62118'}}
+    selectedBorderStyle={{backgroundColor: 'white'}}
+    titles={titles}
+    renderTitle={(index, title, isSelected) => {
+        // I can render my own tab, here I decide to render only an icon
+        
+        let icon = null;
+        
+        if (index == 0) icon = require('../img/menu-0.png');
+        else if (index == 1) icon = require('../img/menu-1.png');
+        else if (index == 2) icon = require('../img/menu-2.png');
+        
+        return (
+            <View style={{backgroundColor: '#E62118', flexDirection:'column', justifyContent:'center', alignItems:'center', alignSelf:'stretch'}}>
+                <Image source={icon} style={{width:18,height:18,tintColor:isSelected ? 'white' : '#5F0707'}} />
+            </View>
+        );
+    }}
+/>
+```
+
 # React-Native-ViewPager
 [![npm](https://img.shields.io/npm/v/rn-viewpager.svg?style=plastic)](https://npmjs.org/package/rn-viewpager) [![npm](https://img.shields.io/npm/dm/rn-viewpager.svg?style=plastic)](https://npmjs.org/package/rn-viewpager) [![npm](https://img.shields.io/npm/dt/rn-viewpager.svg?style=plastic)](https://npmjs.org/package/rn-viewpager)
 
