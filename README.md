@@ -51,7 +51,7 @@ react-native run-ios
 
 import {StyleSheet, View, Text} from 'react-native';
 import React, {Component} from 'react';
-import {IndicatorViewPager, PagerTitleIndicator, PagerDotIndicator} from 'rn-viewpager';
+import {PagerTabIndicator, IndicatorViewPager, PagerTitleIndicator, PagerDotIndicator} from 'rn-viewpager';
 
 export default class ViewPagerPage extends Component {
     render() {
@@ -73,7 +73,8 @@ export default class ViewPagerPage extends Component {
                 </IndicatorViewPager>
 
                 <IndicatorViewPager
-                    style={{flex:1,marginTop:10}}
+                    indicatorPosition="top"
+                    style={{flex:1, paddingTop:20, backgroundColor:'white'}}
                     indicator={this._renderTitleIndicator()}
                 >
                     <View style={{backgroundColor:'cadetblue'}}>
@@ -88,7 +89,8 @@ export default class ViewPagerPage extends Component {
                 </IndicatorViewPager>
                 
                 <IndicatorViewPager
-                    style={{flex:1,marginTop:10}}
+                    indicatorPosition="bottom"
+                    style={{flex:1, paddingTop:20, backgroundColor:'white'}}
                     indicator={this._renderTabIndicator()}
                 >
                     <View style={{backgroundColor:'cadetblue'}}>
@@ -127,7 +129,15 @@ export default class ViewPagerPage extends Component {
                 iconSource: require('../imgs/ic_tab_my_normal.png'),
                 selectedIconSource: require('../imgs/ic_tab_my_click.png')
         }];
-        return <PagerTabIndicator tabs={tabs} />;
+        return (
+            <PagerTabIndicator
+                tabs={tabs}
+                textStyle={{color:'#999'}}
+                selectedTextStyle={{color:'#111'}}
+                iconStyle={{width:25, height:25, tintColor:'#999'}}
+                selectedIconStyle={{width:25, height:25, tintColor:'#111'}}
+            />
+        );
     }
 
 }
