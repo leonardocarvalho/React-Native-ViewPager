@@ -41,12 +41,14 @@ export default class PagerTabIndicator extends Component {
         this.onItemPress = this.onItemPress.bind(this);
     }
 
-    onItemPress(pager, index) {
+    onItemPress(pager, index, isSelected) {
         if (this.props.onItemPress) {
-            this.props.onItemPress(index);
+            this.props.onItemPress(index, isSelected);
         }
 
-        pager.setPage(index);
+        if (!isSelected) {
+            pager.setPage(index);
+        }
     }
 
     render() {
@@ -63,7 +65,7 @@ export default class PagerTabIndicator extends Component {
                             style={[styles.itemContainer, isSelected ? selectedItemStyle : itemStyle]}
                             activeOpacity={0.6}
                             key={index}
-                            onPress={() => {!isSelected && this.onItemPress(pager, index)}}
+                            onPress={() => {this.onItemPress(pager, index, isSelected)}}
                             >
                         <Image
                                 style={[styles.image, isSelected ? selectedIconStyle : iconStyle]}

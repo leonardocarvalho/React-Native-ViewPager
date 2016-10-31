@@ -37,12 +37,14 @@ export default class PagerTitleIndicator extends Component {
         this.onItemPress = this.onItemPress.bind(this);
     }
 
-    onItemPress(pager, index) {
+    onItemPress(pager, index, isSelected) {
         if (this.props.onItemPress) {
-            this.props.onItemPress(index);
+            this.props.onItemPress(index, isSelected);
         }
 
-        pager.setPage(index);
+        if (!isSelected) {
+            pager.setPage(index);
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -73,8 +75,8 @@ export default class PagerTitleIndicator extends Component {
                             style={[styles.titleContainer, itemStyle]}
                             activeOpacity={0.6}
                             key={index}
-                            onPress={() => {!isSelected && this.onItemPress(pager, index)}}
-                            >
+                            onPress={() => {this.onItemPress(pager, index, isSelected)}}
+                        >
                         {titleView}
                         {isSelected ? <View style={[styles.selectedBorder, selectedBorderStyle]}/> : null}
                     </TouchableOpacity>
