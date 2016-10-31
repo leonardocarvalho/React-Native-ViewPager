@@ -11,30 +11,48 @@ import IndicatorViewPager from '../IndicatorViewPager';
 export default class PagerTitleIndicator extends Component {
     static propTypes = {
         ...View.propTypes,
-            initialPage: PropTypes.number,
-            pager: PropTypes.instanceOf(IndicatorViewPager),
-    titles: PropTypes.arrayOf(PropTypes.string).isRequired,
-            itemStyle: View.propTypes.style,
-            itemTextStyle: Text.propTypes.style,
-            selectedItemTextStyle: Text.propTypes.style,
-            selectedBorderStyle: View.propTypes.style,
-            renderTitle: React.PropTypes.func,
-            };
+        initialPage: PropTypes.number,
+        pager: PropTypes.instanceOf(IndicatorViewPager),
+        titles: PropTypes.arrayOf(PropTypes.string).isRequired,
+        itemStyle: View.propTypes.style,
+        itemTextStyle: Text.propTypes.style,
+        selectedItemTextStyle: Text.propTypes.style,
+        selectedBorderStyle: View.propTypes.style,
+        renderTitle: React.PropTypes.func,
+        autoUpdateTitle: React.PropTypes.bool,
+        topTitleEnabled: React.PropTypes.bool,
+        topTitleValue: React.PropTypes.string,
+        topTitleContainerStyle: Text.propTypes.style,
+        topTitleTextStyle: Text.propTypes.style,
+        itemsContainerStyle: Text.propTypes.style,
+    };
 
     static defaultProps = {
         titles: [],
-        initialPage: 0
+        autoUpdateTitle: true,
+        initialPage: 0,
+        topTitleEnabled: true,
+        topTitleValue: 'Home',
+        topTitleStyle: {}
     };
 
     state = {
-        selectedIndex: this.props.initialPage
+        selectedIndex: this.props.initialPage,
+        topTitleValue: this.props.autoUpdateTitle && this.props.topTitleEnabled && this.props.titles && this.props.titles.length > 0 ? this.props.titles[0] : 'Home',
+        topTitleEnabled: this.props.topTitleEnabled
     };
-
 
     constructor(props) {
         super(props);
 
         this.onItemPress = this.onItemPress.bind(this);
+        this.setTopTitle = this.setTopTitle.bind(this);
+    }
+
+    setTopTitle(newTitle) {
+        this.setState({
+            topTitleValue: newTitle
+        });
     }
 
     onItemPress(pager, index, isSelected) {
@@ -71,40 +89,107 @@ export default class PagerTitleIndicator extends Component {
             );
 
             return (
-                    <TouchableOpacity
-                            style={[styles.titleContainer, itemStyle]}
-                            activeOpacity={0.6}
-                            key={index}
-                            onPress={() => {this.onItemPress(pager, index, isSelected)}}
-                        >
-                        {titleView}
-                        {isSelected ? <View style={[styles.selectedBorder, selectedBorderStyle]}/> : null}
-                    </TouchableOpacity>
+                <TouchableOpacity
+                        style={[styles.titleContainer, itemStyle]}
+                        activeOpacity={0.6}
+                        key={index}
+                        onPress={() => {this.onItemPress(pager, index, isSelected)}}
+                    >
+                    {titleView}
+                    {isSelected ? <View style={[styles.selectedBorder, selectedBorderStyle]}/> : null}
+                </TouchableOpacity>
             );
         });
+
+        if (!this.state.topTitleEnabled) {
+            return (
+                <View style={[styles.barContainerWithoutTitle, this.props.style]}>
+                    <View style={[styles.indicatorContainer, this.props.itemsContainerStyle]}>
+                        {titleViews}
+                    </View>
+                </View>
+            );
+        }
+
         return (
-                <View style={[styles.indicatorContainer, this.props.style]}>
+            <View style={[styles.barContainerWithTitle, this.props.style]}>
+                <View style={[styles.titleContainer, this.props.topTitleContainerStyle]}>
+                    <Text style={[styles.topTitleTextStyle, this.props.topTitleTextStyle]}>
+                        {this.state.topTitleValue}
+                    </Text>
+                </View>
+                <View style={[styles.indicatorContainer, this.props.itemsContainerStyle]}>
                     {titleViews}
                 </View>
+            </View>
         );
     }
 
     onPageSelected(e) {
         if (this.state.selectedIndex != e.position) {
-            this.setState({selectedIndex: e.position});
+
+            if (this.props.autoUpdateTitle && this.props.topTitleEnabled && this.props.titles && this.props.titles.length > 0) {
+                this.setState({selectedIndex: e.position, topTitleValue: this.props.titles[e.position] });
+            } else {
+                this.setState({selectedIndex: e.position});
+            }
 
             if (this.props.onPageChange) {
-                this.props.onPageChange(e.position);
+                this.props.onPageChange(e.position, this);
             }
         }
     }
 }
 
 const styles = StyleSheet.create({
+
+    barContainerWithoutTitle: {
+        height:40,
+        zIndex:10,
+        backgroundColor:'white',
+        flexDirection: 'column',
+        justifyContent:'flex-start',
+        alignItems:'flex-start',
+        elevation: 4,
+        shadowOffset: {width: 0,height: 0.2},
+        shadowColor: '#222',
+        shadowOpacity: 0.5,
+    },
+
+    barContainerWithTitle: {
+        height:90,
+        zIndex:10,
+        backgroundColor:'white',
+        flexDirection: 'column',
+        justifyContent:'flex-start',
+        alignItems:'flex-start',
+        elevation: 4,
+        shadowOffset: {width: 0,height: 0.2},
+        shadowColor: '#222',
+        shadowOpacity: 0.5,
+    },
+
+    topTitleContainerStyle: {
+        backgroundColor:'white',
+        alignSelf:'stretch',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems:'center'
+    },
+
+
+    topTitleTextStyle: {
+        marginLeft:15,
+        color: '#999',
+        fontSize:18,
+        fontFamily: 'normal',
+        fontWeight:'bold'
+    },
+
     indicatorContainer: {
         height: 40,
         flexDirection: 'row',
-        backgroundColor: '#F6F6F6'
+        backgroundColor: '#FFFFFF'
     },
     titleText: {
         color: '#333333',
