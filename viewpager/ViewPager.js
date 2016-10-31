@@ -24,6 +24,7 @@ export default class ViewPager extends Component {
         onPageScroll: null,
         onPageSelected: null,
         onPageScrollStateChanged: null,
+        currentPage: 0,
         /**
          * iOS not support yet
          */
@@ -149,11 +150,15 @@ export default class ViewPager extends Component {
     }
 
     setPage(selectedPage) {
-        if (Platform.OS === 'ios')
+        if (Platform.OS === 'ios') {
             this.refs[SCROLLVIEW_REF].scrollTo({x: this.state.width * selectedPage});
-        else {
+        } else {
             this.refs[VIEWPAGER_REF].setPage(selectedPage);
             if (this.props.onPageSelected) this.props.onPageSelected({position: selectedPage});
         }
+
+        this.setState({
+            currentPage: selectedPage
+        });
     }
 }

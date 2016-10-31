@@ -30,6 +30,21 @@ export default class PagerTitleIndicator extends Component {
         selectedIndex: this.props.initialPage
     };
 
+
+    constructor(props) {
+        super(props);
+
+        this.onItemPress = this.onItemPress.bind(this);
+    }
+
+    onItemPress(pager, index) {
+        if (this.props.onItemPress) {
+            this.props.onItemPress(index);
+        }
+
+        pager.setPage(index);
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         return this.state.selectedIndex != nextState.selectedIndex ||
                 this.props.titles + '' != nextProps.titles + '' ||
@@ -58,7 +73,7 @@ export default class PagerTitleIndicator extends Component {
                             style={[styles.titleContainer, itemStyle]}
                             activeOpacity={0.6}
                             key={index}
-                            onPress={()=>{!isSelected && pager.setPage(index)}}
+                            onPress={() => {!isSelected && this.onItemPress(pager, index)}}
                             >
                         {titleView}
                         {isSelected ? <View style={[styles.selectedBorder, selectedBorderStyle]}/> : null}
@@ -73,7 +88,13 @@ export default class PagerTitleIndicator extends Component {
     }
 
     onPageSelected(e) {
-        this.setState({selectedIndex: e.position});
+        if (this.state.selectedIndex != e.position) {
+            this.setState({selectedIndex: e.position});
+
+            if (this.props.onPageChange) {
+                this.props.onPageChange(e.position);
+            }
+        }
     }
 }
 

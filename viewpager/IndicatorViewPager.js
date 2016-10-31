@@ -25,17 +25,25 @@ export default class IndicatorViewPager extends Component {
         initialPage: 0
     };
 
+    getCurrentPageIndex() {
+        if (this.refs[VIEWPAGER_REF]) {
+            return this.refs[VIEWPAGER_REF].state.currentPage;
+        }
+
+        return 0;
+    }
+
     render() {
 
         const container = (
-                <ViewPager
-                        {...this.props}
-                        key="ivp-container"
-                        ref={VIEWPAGER_REF}
-                        style={[styles.pager, this.props.pagerStyle]}
-                        onPageScroll={this._onPageScroll.bind(this)}
-                        onPageSelected={this._onPageSelected.bind(this)}
-                        />
+            <ViewPager
+                {...this.props}
+                key="ivp-container"
+                ref={VIEWPAGER_REF}
+                style={[styles.pager, this.props.pagerStyle]}
+                onPageScroll={this._onPageScroll.bind(this)}
+                onPageSelected={this._onPageSelected.bind(this)}
+            />
         );
 
         const indicator = (
@@ -47,9 +55,9 @@ export default class IndicatorViewPager extends Component {
         const orderedViews = this.props.indicatorPosition == 'top' ? [indicator, container] : [container, indicator];
 
         return (
-                <View style={[styles.container, this.props.style]}>
-                    {orderedViews}
-                </View>
+            <View style={[styles.container, this.props.style]}>
+                {orderedViews}
+            </View>
         );
     }
 
@@ -66,8 +74,10 @@ export default class IndicatorViewPager extends Component {
     }
 
     _renderIndicator() {
-        let {indicator, initialPage}=this.props;
-        if (!indicator)return null;
+        let {indicator, initialPage} = this.props;
+
+        if (!indicator) return null;
+
         return React.cloneElement(indicator, {
             ref: INDICATOR_REF,
             pager: this,

@@ -16,61 +16,83 @@ export default class PagerTabIndicator extends Component {
             text: PropTypes.string,
             iconSource: Image.propTypes.source,
             selectedIconSource: Image.propTypes.source
-})).isRequired,
-        itemStyle: View.propTypes.style,
-        selectedItemStyle: View.propTypes.style,
-        iconStyle: Image.propTypes.style,
-        selectedIconStyle: Image.propTypes.style,
-        textStyle: Text.propTypes.style,
-        selectedTextStyle: Text.propTypes.style
-};
+    })).isRequired,
+            itemStyle: View.propTypes.style,
+            selectedItemStyle: View.propTypes.style,
+            iconStyle: Image.propTypes.style,
+            selectedIconStyle: Image.propTypes.style,
+            textStyle: Text.propTypes.style,
+            selectedTextStyle: Text.propTypes.style
+    };
 
-static defaultProps = {
-    tabs: []
-};
 
-state = {
-    selectedIndex: this.props.initialPage
-};
 
-render() {
-    let {
-            tabs, pager, style, itemStyle, selectedItemStyle, iconStyle,
-            selectedIconStyle, textStyle, selectedTextStyle
-            } = this.props;
-    if (!tabs || tabs.length === 0) return null;
+    static defaultProps = {
+        tabs: []
+    };
 
-    let tabsView = tabs.map((tab, index) => {
-        let isSelected = this.state.selectedIndex === index;
-        return (
-                <TouchableOpacity
-                        style={[styles.itemContainer, isSelected ? selectedItemStyle : itemStyle]}
-                        activeOpacity={0.6}
-                        key={index}
-                        onPress={() => {!isSelected && pager.setPage(index)}}
-                        >
-                    <Image
-                            style={[styles.image, isSelected ? selectedIconStyle : iconStyle]}
-                            source={isSelected ? tab.selectedIconSource : tab.iconSource}
-                            />
-                    <Text
-                            style={[ isSelected ? styles.textSelected : styles.text, isSelected ? selectedTextStyle : textStyle]}
+    state = {
+        selectedIndex: this.props.initialPage
+    };
+
+    constructor(props) {
+        super(props);
+
+        this.onItemPress = this.onItemPress.bind(this);
+    }
+
+    onItemPress(pager, index) {
+        if (this.props.onItemPress) {
+            this.props.onItemPress(index);
+        }
+
+        pager.setPage(index);
+    }
+
+    render() {
+        let {
+                tabs, pager, style, itemStyle, selectedItemStyle, iconStyle,
+                selectedIconStyle, textStyle, selectedTextStyle
+                } = this.props;
+        if (!tabs || tabs.length === 0) return null;
+
+        let tabsView = tabs.map((tab, index) => {
+            let isSelected = this.state.selectedIndex === index;
+            return (
+                    <TouchableOpacity
+                            style={[styles.itemContainer, isSelected ? selectedItemStyle : itemStyle]}
+                            activeOpacity={0.6}
+                            key={index}
+                            onPress={() => {!isSelected && this.onItemPress(pager, index)}}
                             >
-                        {tab.text}
-                    </Text>
-                </TouchableOpacity>
+                        <Image
+                                style={[styles.image, isSelected ? selectedIconStyle : iconStyle]}
+                                source={isSelected ? tab.selectedIconSource : tab.iconSource}
+                                />
+                        <Text
+                                style={[ isSelected ? styles.textSelected : styles.text, isSelected ? selectedTextStyle : textStyle]}
+                                >
+                            {tab.text}
+                        </Text>
+                    </TouchableOpacity>
+            );
+        });
+        return (
+                <View style={[styles.container, style]}>
+                    {tabsView}
+                </View>
         );
-    });
-    return (
-            <View style={[styles.container, style]}>
-                {tabsView}
-            </View>
-    );
-}
+    }
 
-onPageSelected(e) {
-    this.setState({selectedIndex: e.position});
-}
+    onPageSelected(e) {
+        if (this.state.selectedIndex != e.position) {
+            this.setState({selectedIndex: e.position});
+
+            if (this.props.onPageChange) {
+                this.props.onPageChange(e.position);
+            }
+        }
+    }
 }
 
 const styles = StyleSheet.create({

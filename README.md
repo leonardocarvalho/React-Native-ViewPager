@@ -6,8 +6,9 @@ version on npm called [react-native-viewpager-enhanced](https://www.npmjs.com/pa
 Additional features:
 - Add props `indicatorPosition` direction (possible values are "top" and "bottom")
 - Custom render tab titles on `PagerTitleIndicator` component
-- Listen event `onPress` on tab items
-
+- Listen event `onItemPress` on `PagerTabIndicator` and `PagerTitleIndicator`
+- Listen event `onPageChange` on `PagerTabIndicator`, `PagerTitleIndicator` and `PagerDotIndicator`
+- Add method `getCurrentPageIndex` on `IndicatorViewPager` ref
 
 # React-Native-ViewPager
 [![npm](https://img.shields.io/npm/v/rn-viewpager.svg?style=plastic)](https://npmjs.org/package/rn-viewpager) [![npm](https://img.shields.io/npm/dm/rn-viewpager.svg?style=plastic)](https://npmjs.org/package/rn-viewpager) [![npm](https://img.shields.io/npm/dt/rn-viewpager.svg?style=plastic)](https://npmjs.org/package/rn-viewpager)

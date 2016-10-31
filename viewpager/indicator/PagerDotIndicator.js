@@ -59,7 +59,13 @@ export default class PagerDotIndicator extends Component {
     }
 
     onPageSelected(e) {
-        this.setState({selectedIndex: e.position});
+        if (this.state.selectedIndex != e.position) {
+            this.setState({selectedIndex: e.position});
+
+            if (this.props.onPageChange) {
+                this.props.onPageChange(e.position);
+            }
+        }
     }
 }
 const styles = StyleSheet.create({
