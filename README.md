@@ -1,7 +1,7 @@
 # First
 
 This module is not mine, I forked it from [ZbTang](https://github.com/zbtang/React-Native-ViewPager) and I uploaded an enhanced
-version on npm called [react-native-viewpager-enhanced](http://npm.org/react-native-viewpager-enhanced).
+version on npm called [react-native-viewpager-enhanced](https://www.npmjs.com/package/react-native-viewpager-enhanced).
 
 Additional features:
 - Add props `indicatorPosition` direction (possible values are "top" and "bottom")
