@@ -16,12 +16,14 @@ export default class IndicatorViewPager extends Component {
         ...ViewPager.propTypes,
         indicator: PropTypes.node,
         indicatorPosition: PropTypes.string,
+        scrollEnabled: PropTypes.bool,
         pagerStyle: View.propTypes.style
     };
 
     static defaultProps = {
         indicator: null,
         indicatorPosition: 'bottom',
+        scrollEnabled: true,
         initialPage: 0
     };
 
@@ -49,6 +51,7 @@ export default class IndicatorViewPager extends Component {
                 {...this.props}
                 key="ivp-container"
                 ref={VIEWPAGER_REF}
+                scrollEnabled={this.props.scrollEnabled}
                 style={[styles.pager, this.props.pagerStyle]}
                 onPageScroll={this._onPageScroll.bind(this)}
                 onPageSelected={this._onPageSelected.bind(this)}
